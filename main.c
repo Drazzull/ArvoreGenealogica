@@ -6,8 +6,33 @@ typedef struct sPessoa{
     struct sPessoa *mae;
 } PESSOA;
 
+void salvar();
+void abrir();
+void mostrar();
+void pesquisar();
+
 int main(void)
 {
     printf("Hello World!\n");
     return 0;
+}
+
+void salvar()
+{
+
+}
+
+void abrir()
+{
+
+}
+
+void mostrar()
+{
+
+}
+
+void pesquisar()
+{
+
 }
