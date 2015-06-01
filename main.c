@@ -15,11 +15,31 @@ PESSOA arvore[15];
 /// \brief construirArvore - Método utilizado para construção da árvore genealógica
 ///
 void construirArvore();
+
+///
+/// \brief salvar - Método utilizado para salvar a árvore em um arquivo de texto
+///
 void salvar();
+
+///
+/// \brief abrir - Método utilizado para abrir o arquivo de texto contendo a árvore pronta
+///
 void abrir();
+
+///
+/// \brief mostrar - Imprime a árvore genealógica na tela
+///
 void mostrar();
+
+///
+/// \brief pesquisar - Pesquisa por uma pessoa para saber o nível de parentesco
+///
 void pesquisar();
 
+///
+/// \brief main - Método principal contendo o menu e as demais chamadas de método
+/// \return - 0
+///
 int main(void)
 {
     while(1)
@@ -37,28 +57,42 @@ int main(void)
         switch(opcao)
         {
         case 1:
-
+            construirArvore();
             break;
+
         case 2:
             break;
+
         case 3:
             break;
+
         case 4:
             break;
+
         case 5:
             break;
+
         case 6:
             return 0;
+
         default:
             printf("Opcao invalida");
             break;
         }
     }
+
     return 0;
 }
 
+///
+/// \brief inserirRegistro - Insere um registro no array
+/// \param atual - ID do registro que será inserido
+/// \param filho - ID do filho do registro atual
+/// \param tipoRegistro - (M) Mãe, (P) Pai, (F) Filho
+///
 void inserirRegistro(int atual, int filho, char tipoRegistro)
 {
+    // Cria uma variável para conter a string digitada pelo usuário
     char valor[100];
     int i = 0;
     for(i = 0; i < 100; i++)
@@ -66,17 +100,21 @@ void inserirRegistro(int atual, int filho, char tipoRegistro)
         valor[i] = ' ';
     }
 
+    // Limpa o buffer de entrada, obtém o valor que o usuário digitar e armazena no array
     fflush(stdin);
     gets(valor);
     strcpy(arvore[atual].nome, valor);
 
+    // Preenche a mãe ou o pai do filho de acordo com o registro
     switch(tipoRegistro)
     {
     case 'M':
+        // Registro do tipo Mãe
         arvore[filho].mae = &arvore[atual];
         break;
 
     case 'P':
+        // Registro do tipo Pai
         arvore[filho].pai = &arvore[atual];
         break;
     }
