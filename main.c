@@ -10,6 +10,7 @@ typedef struct sPessoa{
 
 // Array com as pessoas
 PESSOA arvore[15];
+int arvorePreenchida = 0;
 
 ///
 /// \brief construirArvore - Método utilizado para construção da árvore genealógica
@@ -166,10 +167,30 @@ void construirArvore()
 
     printf("Informe o nome do pai do avo paterno: ");
     inserirRegistro(14, 6, 'P');
+
+    // Define que a árvore foi preenchida
+    arvorePreenchida = 1;
 }
 
 void salvar()
 {
+    if (!arvorePreenchida)
+    {
+        printf("A arvore ainda não foi preenchida.\nE necessario construi-la ou abrir um arquivo com as informacoes salvas ");
+        printf("antes de tentar salvar as informacoes em um arquivo de texto.");
+        return;
+    }
+
+    FILE *fp_destino;
+    char destino[] = "C:\\temp\\arvoreGenealogica.txt";
+
+    // Cria o arquivo desejado e verifica se foi possível criá-lo
+    fp_destino = fopen(destino,"wb");
+    if(fp_destino == NULL)
+    {
+        printf("Não foi possivel criar o arquivo em %s", destino);
+        return;
+    }
 
 }
 
