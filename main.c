@@ -53,32 +53,37 @@ int main(void)
         printf("4 - Mostrar\n");
         printf("5 - Pesquisar\n");
         printf("6 - Sair\n");
+        fflush(stdin);
         scanf("%i", &opcao);
 
         switch(opcao)
         {
-        case 1:
-            construirArvore();
-            break;
+            case 1:
+                construirArvore();
+                break;
 
-        case 2:
-            break;
+            case 2:
+                salvar();
+                break;
 
-        case 3:
-            break;
+            case 3:
+                abrir();
+                break;
 
-        case 4:
-            break;
+            case 4:
+                mostrar();
+                break;
 
-        case 5:
-            break;
+            case 5:
+                pesquisar();
+                break;
 
-        case 6:
-            return 0;
+            case 6:
+                return 0;
 
-        default:
-            printf("Opcao invalida");
-            break;
+            default:
+                printf("Opcao invalida.\n");
+                break;
         }
     }
 
@@ -109,15 +114,15 @@ void inserirRegistro(int atual, int filho, char tipoRegistro)
     // Preenche a mãe ou o pai do filho de acordo com o registro
     switch(tipoRegistro)
     {
-    case 'M':
-        // Registro do tipo Mãe
-        arvore[filho].mae = &arvore[atual];
-        break;
+        case 'M':
+            // Registro do tipo Mãe
+            arvore[filho].mae = &arvore[atual];
+            break;
 
-    case 'P':
-        // Registro do tipo Pai
-        arvore[filho].pai = &arvore[atual];
-        break;
+        case 'P':
+            // Registro do tipo Pai
+            arvore[filho].pai = &arvore[atual];
+            break;
     }
 }
 
@@ -174,10 +179,11 @@ void construirArvore()
 
 void salvar()
 {
+    // Verifica se a árvore foi preenchida
     if (!arvorePreenchida)
     {
-        printf("A arvore ainda não foi preenchida.\nE necessario construi-la ou abrir um arquivo com as informacoes salvas ");
-        printf("antes de tentar salvar as informacoes em um arquivo de texto.");
+        printf("\nA arvore ainda nao foi preenchida.\nE necessario construi-la ou abrir um arquivo com as informacoes salvas ");
+        printf("antes de tentar salvar as informacoes em um arquivo de texto.\n");
         return;
     }
 
@@ -186,11 +192,39 @@ void salvar()
 
     // Cria o arquivo desejado e verifica se foi possível criá-lo
     fp_destino = fopen(destino,"wb");
-    if(fp_destino == NULL)
+    if (fp_destino == NULL)
     {
         printf("Não foi possivel criar o arquivo em %s", destino);
         return;
     }
+
+    // Percorre a arvore para armazenar os registros um a um
+    int i;
+    for(i = 0; i < 15; i++)
+    {
+        // Grava um número identificador da ordem
+        if (!fwrite(&i, sizeof(int), 1, fp_destino) == 1)
+        {
+            // Fecha o arquivo
+            fclose(fp_destino);
+            printf("Ocorreu um erro ao gravar a arvore no arquivo.\n");
+            return;
+        }
+
+        // Grava o nome da pessoa
+        if (!fwrite(arvore[i].nome, sizeof(char[100]), 1, fp_destino) == 1)
+        {
+            // Fecha o arquivo
+            fclose(fp_destino);
+            printf("Ocorreu um erro ao gravar a arvore no arquivo.\n");
+            return;
+        }
+    }
+
+    printf("Arquivo salvo com sucesso.\n");
+
+    // Fecha o arquivo
+    fclose(fp_destino);
 
 }
 
@@ -201,10 +235,377 @@ void abrir()
 
 void mostrar()
 {
+    //variável para guardar a quantia de caracteres do maior nome
+    int tam = 0;
+    int i, aux;
 
+    //verifica o tamanho do maior nome e atribui para a variável tam
+    for(i = 0; i <15; i++)
+    {
+        if (tam<strlen(arvore[i].nome))
+        {
+            tam = strlen(arvore[i].nome)+2;
+        }
+    }
+
+    //caso os nomes sejam todos mais curtos do que "Bisavo"+2, atribui esse tamanho para tam
+    if (tam < (strlen("Bisavo")+2))
+    {
+        tam = strlen("Bisavo")+2;
+    }
+
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
+
+    //imprime 8 vezes Bisavo, sempre preenchendo com espaços até atingir o tamanho do maior nome
+    for(i = 0; i < 8; i++)
+    {
+        aux = strlen("Bisavo");
+        printf("Bisavo");
+        while(aux<tam)
+        {
+            printf(" ");
+            aux++;
+        }
+    }
+    printf("\n");
+
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
+
+    //imprime o nome dos 8 bisavós, sempre preenchendo com espaços até atingir o tamanho do maior nome
+    printf(arvore[14].nome);
+    aux = strlen(arvore[14].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+
+    printf(arvore[13].nome);
+    aux = strlen(arvore[13].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[12].nome);
+    aux = strlen(arvore[12].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[11].nome);
+    aux = strlen(arvore[11].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[10].nome);
+    aux = strlen(arvore[10].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[9].nome);
+    aux = strlen(arvore[9].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[8].nome);
+    aux = strlen(arvore[8].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[7].nome);
+    aux = strlen(arvore[7].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("\n");
+
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
+
+    //avança tam/2 caracteres para deixar a apresentação tabulada
+    aux=0;
+    while(aux<tam/2)
+    {
+        printf(" ");
+        aux++;
+    }
+
+    //imprime 4 vezes Avo, sempre preenchendo com espaços até atingir o tamanho do maior nome
+    for(i = 0; i < 4; i++)
+    {
+        aux = strlen("Avo");
+        printf("Avo");
+        while(aux<tam*2)
+        {
+            printf(" ");
+            aux++;
+        }
+    }
+    printf("\n");
+
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
+
+    //avança tam/2 caracteres para deixar a apresentação tabulada
+    aux=0;
+    while(aux<tam/2)
+    {
+        printf(" ");
+        aux++;
+    }
+
+    //imprime o nome dos 4 avós, sempre preenchendo com espaços até atingir o tamanho do maior nome
+    printf(arvore[6].nome);
+    aux = strlen(arvore[6].nome);
+    while(aux<tam*2)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[5].nome);
+    aux = strlen(arvore[5].nome);
+    while(aux<tam*2)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[4].nome);
+    aux = strlen(arvore[4].nome);
+    while(aux<tam*2)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[3].nome);
+    aux = strlen(arvore[3].nome);
+    while(aux<tam*2)
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("\n");
+
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
+
+    //avança 1.5*tam caracteres para deixar a apresentação tabulada
+    aux=0;
+    while(aux<(tam+tam/2))
+    {
+        printf(" ");
+        aux++;
+    }
+    //imprime Pai e Mae, avançando com espaços até atigir o tamanho do maior nome
+    printf("Pai");
+    aux = strlen("Pai");
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    aux=0;
+    while(aux<(tam*3))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("Mae");
+    aux=0;
+    while(aux<(tam*3))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("\n");
+
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
+
+    //imprime o nome dos pais
+    aux=0;
+    while(aux<(tam+tam/2))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[2].nome);
+    aux = strlen(arvore[2].nome);
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    aux=0;
+    while(aux<(tam*3))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[1].nome);
+    aux=0;
+    while(aux<(tam*3))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("\n");
+
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
+
+    //avança 3.5*tam e imprime o nome do usuário
+    aux=0;
+    while(aux<(tam*3)+(tam/2))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("Usuario");
+    aux = strlen("Usuario");
+    while(aux<tam)
+    {
+        printf(" ");
+        aux++;
+    }
+    aux=0;
+    while(aux<(tam*3)+(tam/2))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("\n");
+    aux=0;
+    while(aux<(tam*3)+(tam/2))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf(arvore[0].nome);
+    aux=0;
+    while(aux<(tam*3)+(tam/2))
+    {
+        printf(" ");
+        aux++;
+    }
+    printf("\n");
+    //imprime underlines para formar a caixa
+    aux=0;
+    while(aux<tam*8)
+    {
+        printf("_");
+        aux++;
+    }
+    printf("\n");
 }
 
 void pesquisar()
 {
+    printf("Nome: ");
+    char valor[100];
+    int i = 0;
+    for(i = 0; i < 100; i++)
+    {
+        valor[i] = ' ';
+    }
 
+    fflush(stdin);
+    gets(valor);
+
+    //busca o nome digitado na arvore
+    for(i=0; i<15; i++){
+        if (strcmp(arvore[i].nome, valor))
+        {
+            // PROBLEMA AQUI!!!
+            break;
+        }
+    }
+
+    //de acordo com o índice, imprime a relação familiar
+    switch(i)
+    {
+        case 0:
+            printf("O nome corresponde ao seu.\n");
+            break;
+        case 1:
+            printf("O nome corresponde a sua mae.\n");
+            break;
+        case 2:
+            printf("O nome corresponde ao seu pai.\n");
+            break;
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            printf("O nome corresponde a um avo.\n");
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+            printf("O nome corresponde a um bisavo.\n");
+            break;
+        default:
+            printf("O nome nao corresponde ao grupo familiar.\n");
+            break;
+    }
 }
