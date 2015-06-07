@@ -96,20 +96,10 @@ int main(void)
 /// \param filho - ID do filho do registro atual
 /// \param tipoRegistro - (M) Mãe, (P) Pai, (F) Filho
 ///
-void inserirRegistro(int atual, int filho, char tipoRegistro)
+void inserirRegistro(int atual, int filho, char tipoRegistro, char *nome)
 {
-    // Cria uma variável para conter a string digitada pelo usuário
-    char valor[100];
-    int i = 0;
-    for(i = 0; i < 100; i++)
-    {
-        valor[i] = ' ';
-    }
-
-    // Limpa o buffer de entrada, obtém o valor que o usuário digitar e armazena no array
-    fflush(stdin);
-    gets(valor);
-    strcpy(arvore[atual].nome, valor);
+    // Altera o nome do registro atual conforme o passado por parâmetro
+    strcpy(arvore[atual].nome, nome);
 
     // Preenche a mãe ou o pai do filho de acordo com o registro
     switch(tipoRegistro)
@@ -128,50 +118,82 @@ void inserirRegistro(int atual, int filho, char tipoRegistro)
 
 void construirArvore()
 {
+    // Apresenta uma mensagem ao usuário e obtém o valor do nome que o mesmo digitará
     printf("Informe seu nome: ");
-    inserirRegistro(0, 0, 'F');
+    char valor[100];
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(0, 0, 'F', valor);
 
     printf("Informe o nome da sua mae: ");
-    inserirRegistro(1, 0, 'M');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(1, 0, 'M', valor);
 
     printf("Informe o nome do seu pai: ");
-    inserirRegistro(2, 0, 'P');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(2, 0, 'P', valor);
 
     printf("Informe o nome da avo materna: ");
-    inserirRegistro(3, 1, 'M');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(3, 1, 'M', valor);
 
     printf("Informe o nome do avo materno: ");
-    inserirRegistro(4, 1, 'P');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(4, 1, 'P', valor);
 
     printf("Informe o nome da avo paterna: ");
-    inserirRegistro(5, 2, 'M');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(5, 2, 'M', valor);
 
     printf("Informe o nome do avo paterno: ");
-    inserirRegistro(6, 2, 'P');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(6, 2, 'P', valor);
 
     printf("Informe o nome da mae da avo materna: ");
-    inserirRegistro(7, 3, 'M');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(7, 3, 'M', valor);
 
     printf("Informe o nome do pai da avo materna: ");
-    inserirRegistro(8, 3, 'P');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(8, 3, 'P', valor);
 
     printf("Informe o nome da mae do avo materno: ");
-    inserirRegistro(9, 4, 'M');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(9, 4, 'M', valor);
 
     printf("Informe o nome do pai do avo materno: ");
-    inserirRegistro(10, 4, 'P');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(10, 4, 'P', valor);
 
     printf("Informe o nome da mae da avo paterna: ");
-    inserirRegistro(11, 5, 'M');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(11, 5, 'M', valor);
 
     printf("Informe o nome do pai da avo paterna: ");
-    inserirRegistro(12, 5, 'P');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(12, 5, 'P', valor);
 
     printf("Informe o nome da mae do avo paterno: ");
-    inserirRegistro(13, 6, 'M');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(13, 6, 'M', valor);
 
     printf("Informe o nome do pai do avo paterno: ");
-    inserirRegistro(14, 6, 'P');
+    fflush(stdin);
+    gets(valor);
+    inserirRegistro(14, 6, 'P', valor);
 
     // Define que a árvore foi preenchida
     arvorePreenchida = 1;
@@ -202,15 +224,6 @@ void salvar()
     int i;
     for(i = 0; i < 15; i++)
     {
-        // Grava um número identificador da ordem
-        if (!fwrite(&i, sizeof(int), 1, fp_destino) == 1)
-        {
-            // Fecha o arquivo
-            fclose(fp_destino);
-            printf("Ocorreu um erro ao gravar a arvore no arquivo.\n");
-            return;
-        }
-
         // Grava o nome da pessoa
         if (!fwrite(arvore[i].nome, sizeof(char[100]), 1, fp_destino) == 1)
         {
@@ -222,22 +235,136 @@ void salvar()
     }
 
     printf("Arquivo salvo com sucesso.\n");
-
-    // Fecha o arquivo
     fclose(fp_destino);
-
 }
 
 void abrir()
 {
+    FILE *fp_origem;
+    char origem[] = "C:\\temp\\arvoreGenealogica.txt";
 
+    int n = 0, i = 0;
+    char nomes[15][100];
+
+    // Abre o arquivo para que seja possível lê-lo
+    fp_origem = fopen(origem,"rb");
+    if (fp_origem == NULL)
+    {
+        printf("Não foi possivel abrir o arquivo em %s", origem);
+        return;
+    }
+
+    n = fread(nomes, sizeof(char[100]), 15, fp_origem);
+
+    for(i = 0; i < n; i++)
+    {
+        int filho = 0;
+        char tipoRegistro = ' ';
+        switch(i)
+        {
+            case 0:
+                filho = 0;
+                tipoRegistro = 'F';
+                break;
+
+            case 1:
+                filho = 0;
+                tipoRegistro = 'M';
+                break;
+            case 2:
+                filho = 0;
+                tipoRegistro = 'P';
+                break;
+
+            case 3:
+                filho = 1;
+                tipoRegistro = 'M';
+                break;
+
+            case 4:
+                filho = 1;
+                tipoRegistro = 'P';
+                break;
+
+            case 5:
+                filho = 2;
+                tipoRegistro = 'M';
+                break;
+
+            case 6:
+                filho = 2;
+                tipoRegistro = 'P';
+                break;
+
+            case 7:
+                filho = 3;
+                tipoRegistro = 'M';
+                break;
+
+            case 8:
+                filho = 3;
+                tipoRegistro = 'P';
+                break;
+
+            case 9:
+                filho = 4;
+                tipoRegistro = 'M';
+                break;
+
+            case 10:
+                filho = 4;
+                tipoRegistro = 'P';
+                break;
+
+            case 11:
+                filho = 5;
+                tipoRegistro = 'M';
+                break;
+
+            case 12:
+                filho = 5;
+                tipoRegistro = 'P';
+                break;
+
+            case 13:
+                filho = 6;
+                tipoRegistro = 'M';
+                break;
+
+            case 14:
+                filho = 6;
+                tipoRegistro = 'P';
+                break;
+
+            default:
+                printf("O registro no arquivo de texto nao corresponde ao grupo familiar.\n");
+                fclose(fp_origem);
+                return;
+        }
+
+        // Após definir as informações do registro, insere o mesmo na árvore
+        inserirRegistro(i, filho, tipoRegistro, nomes[i]);
+
+        // Define que a árvore foi preenchida
+        arvorePreenchida = 1;
+    }
+
+    printf("Arvore recuperada com sucesso.\n");
+    fclose(fp_origem);
 }
 
 void mostrar()
 {
+    // Verifica se a árvore foi preenchida
+    if (!arvorePreenchida)
+    {
+        printf("\nA arvore ainda nao foi preenchida.\nE necessario construi-la ou abrir um arquivo com as informacoes salvas ");
+        printf("antes de tentar mostrá-la.\n");
+        return;
+    }
+
     //variável para guardar a quantia de caracteres do maior nome
-    int tam = 0;
-    int i, aux;
+    unsigned int tam = 0, i, aux = 0;
 
     //verifica o tamanho do maior nome e atribui para a variável tam
     for(i = 0; i <15; i++)
@@ -255,7 +382,6 @@ void mostrar()
     }
 
     //imprime underlines para formar a caixa
-    aux=0;
     while(aux<tam*8)
     {
         printf("_");
@@ -556,6 +682,14 @@ void mostrar()
 
 void pesquisar()
 {
+    // Verifica se a árvore foi preenchida
+    if (!arvorePreenchida)
+    {
+        printf("\nA arvore ainda nao foi preenchida.\nE necessario construi-la ou abrir um arquivo com as informacoes salvas ");
+        printf("antes de tentar pesquisar por um nome.\n");
+        return;
+    }
+
     printf("Nome: ");
     char valor[100];
     int i = 0;
@@ -568,10 +702,10 @@ void pesquisar()
     gets(valor);
 
     //busca o nome digitado na arvore
-    for(i=0; i<15; i++){
-        if (strcmp(arvore[i].nome, valor))
+    for(i=0; i<15; i++)
+    {
+        if (strcmp(arvore[i].nome, valor) == 0)
         {
-            // PROBLEMA AQUI!!!
             break;
         }
     }
