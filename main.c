@@ -1,3 +1,10 @@
+/*
+    Equipe:
+            Arthur B. Bilibio
+            Johnatan M. Rosa
+            Welenton A. Webler
+*/
+
 #include <stdio.h>
 #include <string.h>
 
@@ -714,7 +721,7 @@ void pesquisar()
     switch(i)
     {
         case 0:
-            printf("O nome corresponde ao seu.\n");
+            printf("Você digitou seu nome.\n");
             break;
         case 1:
             printf("O nome corresponde a sua mae.\n");
